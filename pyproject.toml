@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "testparser"
+version = "0.1.0"
+description = ""
+authors = ["d2vova <vprikhodko85@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+selenium = "^4.26.1"
+beautifulsoup4 = "^4.12.3"
+webdriver-manager = "^4.0.2"
+tqdm = "^4.66.6"
+
+
+[tool.poetry.group.dev.dependencies]
+flake8 = "^7.1.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
