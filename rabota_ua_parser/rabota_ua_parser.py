@@ -35,7 +35,7 @@ def setup_selenium():
     return driver
 
 
-def fetch_resumes(url, driver):
+def fetch_resumes_rabota_ua(url, driver):
     try:
         driver.get(url)
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, CV_CARD_SELECTOR)))
@@ -130,7 +130,7 @@ def main(pages, skill=None):
         print(f"Ожидание {sleep_time} секунд...")
         time.sleep(sleep_time)
 
-        resumes = fetch_resumes(url, driver)
+        resumes = fetch_resumes_rabota_ua(url, driver)
         print(f"Найдено {len(resumes)} резюме на странице {page}.")
 
         if not resumes:
