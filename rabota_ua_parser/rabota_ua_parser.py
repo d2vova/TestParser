@@ -21,7 +21,8 @@ LINK_SELECTOR = 'a.santa-no-underline'
 NAME_SELECTOR = 'p.santa-typo-regular.santa-truncate'
 DETAILS_SELECTOR = 'div.santa-flex.santa-items-center.santa-space-x-10.santa-pr-20.santa-whitespace-nowrap'
 POSTED_TIME_SELECTOR = 'p.santa-typo-additional.santa-text-black-500'
-
+SALARY_SELECTOR = ('div.santa-flex.santa-items-center.santa-space-x-10.santa-pr-20.santa-whitespace-nowrap '
+                   'p.santa-typo-secondary')
 
 def setup_selenium():
     chrome_options = Options()
@@ -71,12 +72,24 @@ def fetch_resumes(url, driver):
         except NoSuchElementException:
             posted_time = 'No time'
 
+        try:
+            salary_elements = resume.find_elements(By.CSS_SELECTOR, SALARY_SELECTOR)
+            estimated_salary = 'No salary'
+            for element in salary_elements:
+                text = element.text.strip()
+                if "грн" in text or "$" in text:
+                    estimated_salary = text
+                    break
+        except NoSuchElementException:
+            estimated_salary = 'No salary'
+
         resume_data = {
             "title": title,
             "link": link,
             "name": name,
             "details": details,
-            "posted_time": posted_time
+            "posted_time": posted_time,
+            "estimated_salary": estimated_salary
         }
 
         # Проверка на дублирование по уникальному 'link'
