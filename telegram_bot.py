@@ -5,7 +5,7 @@ from SortingResumes.sort_by_relevance import sort_candidates_by_relevance
 from work_ua_parser.parser_work import fetch_resumes_work_ua
 from rabota_ua_parser.rabota_ua_parser import fetch_resumes_rabota_ua
 
-TOKEN = '7822942364:AAGePPGtX-uqjHBBO5J7hx7IxKonwZyfz9w'
+TOKEN = 'your token'
 JOB_TITLE,  SKILL, SALARY, CONFIRMATION = range(4)
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
