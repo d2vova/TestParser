@@ -6,17 +6,11 @@ import random
 from tqdm import tqdm
 
 
-def fetch_resumes_work_ua(job_title=None, experience=None, skill=None, location=None, salary=None, pages=1):
-    # Базовый URL для work.ua
-    base_url = "https://www.work.ua/resumes"
+def fetch_resumes_work_ua(job_title=None, location=None, pages=1):
+    job_title_formatted = job_title.lower().replace(" ", "+") if job_title else ""
+    location_formatted = f"-{location.lower()}" if location else ""
 
-    # Формируем URL на основе фильтров
-    if job_title:
-        base_url += f"{job_title.lower().replace(' ', '+')}/"
-    if skill:
-        base_url += f"{skill.lower().replace(' ', '+')}/"
-    if location:
-        base_url += f"{location.lower().replace(' ', '+')}/"
+    base_url = f"https://www.work.ua/resumes{location_formatted}-{job_title_formatted}/"
 
     resume_list = []
 
@@ -28,49 +22,29 @@ def fetch_resumes_work_ua(job_title=None, experience=None, skill=None, location=
         soup = BeautifulSoup(response.text, 'html.parser')
 
         resumes = soup.find_all('div', class_='card card-hover card-search resume-link card-visited wordwrap')
-        print(f"Найдено резюме на странице: {len(resumes)}")  # Отладочный вывод
+        print(f"Найдено резюме на странице: {len(resumes)}")
 
         for resume in resumes:
             title = resume.find('h2').text.strip() if resume.find('h2') else 'No title'
             link = f"https://www.work.ua{resume.find('a')['href']}" if resume.find('a') else 'No link'
-            name = resume.find('span', class_='resume-link__title').text.strip() if resume.find(
-                'span', class_='resume-link__title') else 'No name'
             details = resume.find('p', class_='overflow').text.strip() if resume.find(
-                'p', class_='overflow') else 'No details'
+                'p', 'overflow') else 'No details'
             posted_time = resume.find('div', class_='text-muted').text.strip() if resume.find(
-                'div', class_='text-muted') else 'No time'
+                'div', 'text-muted') else 'No time'
             salary_data = resume.find('span', class_='text-muted').text.strip() if resume.find(
-                'span', class_='text-muted') else 'No salary'
+                'span', 'text-muted') else 'No salary'
 
             resume_data = {
                 "title": title,
                 "link": link,
-                "name": name,
                 "details": details,
                 "posted_time": posted_time,
                 "salary": salary_data
             }
 
-            # Применение фильтров после парсинга
-            if experience and experience.lower() not in details.lower():
-                continue
-            if skill and skill.lower() not in details.lower():
-                continue
-            if location and location.lower() not in details.lower():
-                continue
-            if salary:
-                try:
-                    # Извлекаем числовое значение зарплаты для сравнения
-                    salary_value = int(salary_data.replace(' ', '').replace('грн', ''))
-                    if salary_value < int(salary):
-                        continue
-                except ValueError:
-                    continue  # Пропускаем, если зарплата указана некорректно
-
-            # Добавляем резюме в список после успешного прохождения всех фильтров
             resume_list.append(resume_data)
 
-        time.sleep(random.randint(5, 10))  # Умеренная задержка
+        time.sleep(random.randint(5, 10))
 
     return resume_list
 
@@ -82,12 +56,11 @@ def save_to_json(data, filename):
     print(f"Данные сохранены в {filename}")
 
 
-# Пример использования
 if __name__ == "__main__":
     job_title = "Python-програміст"
     experience = ""
     skill = "Python"
-    location = "Дистанційно"
+    location = ""
     salary = ""
     pages = 3
 

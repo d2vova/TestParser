@@ -74,14 +74,14 @@ def fetch_resumes_rabota_ua(url, driver):
 
         try:
             salary_elements = resume.find_elements(By.CSS_SELECTOR, SALARY_SELECTOR)
-            estimated_salary = 'No salary'
+            salary = 'No salary'
             for element in salary_elements:
                 text = element.text.strip()
                 if "грн" in text or "$" in text:
-                    estimated_salary = text
+                    salary = text
                     break
         except NoSuchElementException:
-            estimated_salary = 'No salary'
+            salary = 'No salary'
 
         resume_data = {
             "title": title,
@@ -89,7 +89,7 @@ def fetch_resumes_rabota_ua(url, driver):
             "name": name,
             "details": details,
             "posted_time": posted_time,
-            "estimated_salary": estimated_salary
+            "salary": salary
         }
 
         # Проверка на дублирование по уникальному 'link'
